@@ -26,4 +26,5 @@ urlpatterns = [
     path('online_devices/',views.online_devices,name="online_devices"),
     path('delete/<int:id>/',views.delete,name="delete"),
     path('edit_device/<int:id>',views.edit_device,name="edit_device"),
+    path('api/devices/',views.device_list_api,name="device_list_api"),
 ]

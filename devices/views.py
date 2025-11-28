@@ -1,6 +1,9 @@
 from django.shortcuts import get_object_or_404, render, redirect
 from .models import Device
 from .forms import DeviceForm
+from rest_framework.response import Response
+from rest_framework.decorators import api_view
+from .serialisers import DeviceSerializer
 
 # Create your views here.
 
@@ -44,3 +47,10 @@ def edit_device(request,id):
         form=DeviceForm(instance=device)
 
     return render(request,"edit_device.html",{"form":form,"device":device})
+
+
+@api_view(["GET"])
+def device_list_api(request):
+    devices = Device.objects.all()
+    serializer = DeviceSerializer(devices, many=True)
+    return Response(serializer.data)
