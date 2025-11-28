@@ -11,6 +11,8 @@
     {% if request.user.is_staff %}
     <a href="/delete/{{d.id}}">Delete</a>
     {% endif %}
+    <td><a href="/edit_device/{{d.id}}">Edit</a></td>
+
 </p>
 {% empty %}
 <p> No device yet. </p>

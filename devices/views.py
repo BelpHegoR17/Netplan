@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import get_object_or_404, render, redirect
 from .models import Device
 from .forms import DeviceForm
 
@@ -30,3 +30,17 @@ def delete(request,id):
     device = Device.objects.get(id=id)
     device.delete()
     return redirect("home")
+
+def edit_device(request,id):
+    device = get_object_or_404(Device,id=id)
+
+    if request.method=="POST":
+        form=DeviceForm(request.POST,instance=device)
+        if form.is_valid():
+            form.save()
+            return redirect("home")
+        
+    else:
+        form=DeviceForm(instance=device)
+
+    return render(request,"edit_device.html",{"form":form,"device":device})
