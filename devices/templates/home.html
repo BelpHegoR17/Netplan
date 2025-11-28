@@ -1,0 +1,20 @@
+<h2>Home List</h2>
+
+<h3><b>Total devices: {{ count }}</b></h3>
+<h3><b>Online devices: {{ ucount }}</b></h3>
+<h3><b>Offline devices: {{ dcount }}</b></h3>
+
+<a href="/add">+ Add Device</a>
+<hr>
+{% for d in devices %}
+<p><b>{{ d.name }}</b> | {{ d.device_type }} | {{ d.ip_address }} | Status:{{ d.status}} | Location:{{ d.location}}
+    {% if request.user.is_staff %}
+    <a href="/delete/{{d.id}}">Delete</a>
+    {% endif %}
+</p>
+{% empty %}
+<p> No device yet. </p>
+{% endfor%}
+
+<h3><a href="/online_devices"> Online_Devices </a></h3>
+<h3><a href="/admin"> Admin Portal</a></h3>

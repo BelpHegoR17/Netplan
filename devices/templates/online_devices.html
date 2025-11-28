@@ -1,0 +1,6 @@
+<h2>Online Devices</h2>
+{% for d in devices%}
+{% if d.status == "UP" %}
+<p><b>{{ d.name}}</b> | {{ d.device_type}} | {{ d.ip_address}} | {{ d.status}} | {{ d.location}} </p>
+{% endif %}
+{% endfor %}
