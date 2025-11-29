@@ -74,3 +74,19 @@ def add_device_api(request):
         return Response(serialiser.data, status=201)
     
     return Response(serialiser.errors, status=400)
+
+@api_view(["PUT","PATCH"])
+def update_api(request,id):
+    try:
+        device = Device.objects.get(id=id)
+    except Device.DoesNotExist:
+        return Response({"error":"Device not found"}, status = 201)
+    
+    partial = True if request.method=="PATCH" else False
+    serialiser = DeviceSerializer(device, data=request.data, partial=partial)
+
+    if serialiser.is_valid():
+        serialiser.save()
+        return Response({"message":"Device updated", "data":serialiser.data})
+    
+    return Response(serialiser.errors, status=400)
