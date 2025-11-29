@@ -49,11 +49,11 @@ def edit_device(request,id):
     return render(request,"edit_device.html",{"form":form,"device":device})
 
 
-@api_view(["GET"])
-def device_list_api(request):
-    devices = Device.objects.all()
-    serializer = DeviceSerializer(devices, many=True)
-    return Response(serializer.data)
+# @api_view(["GET"])
+# def device_list_api(request):
+#     devices = Device.objects.all()
+#     serializer = DeviceSerializer(devices, many=True)
+#     return Response(serializer.data)
 
 @api_view(["GET"])
 def device_detail_api(request, id):
@@ -100,3 +100,24 @@ def delete_device_api(request,id):
     
     device.delete()
     return Response({"message":"Device deleted successfully"}, status=204)
+
+@api_view(["GET"])
+def device_list_api(request):
+    devices = Device.objects.all()
+
+    status = request.GET.get("status")
+    device_type = request.GET.get("device_type")
+    location = request.GET.get("location")
+    search = request.GET.get("search")
+
+    if status:
+        devices = devices.filter(status = status)
+    if device_type:
+        devices = devices.filter(device_type=device_type)
+    if location:
+        devices = devices.filter(location=location)
+    if search:
+        devices = devices.filter(status__icontains=search)
+    
+    serialiser = DeviceSerializer(devices, many=True)
+    return Response(serialiser.data)
