@@ -54,3 +54,13 @@ def device_list_api(request):
     devices = Device.objects.all()
     serializer = DeviceSerializer(devices, many=True)
     return Response(serializer.data)
+
+@api_view(["GET"])
+def device_detail_api(request, id):
+    try:
+        device = Device.objects.get(id=id)
+    except Device.DoesNotExist:
+        return Response({"error":"Device not found"}, status=404)
+    
+    serialiser = DeviceSerializer(device)
+    return Response(serialiser.data)
