@@ -64,3 +64,13 @@ def device_detail_api(request, id):
     
     serialiser = DeviceSerializer(device)
     return Response(serialiser.data)
+
+@api_view(["POST"])
+def add_device_api(request):
+    serialiser = DeviceSerializer(data=request.data)
+
+    if serialiser.is_valid():
+        serialiser.save()
+        return Response(serialiser.data, status=201)
+    
+    return Response(serialiser.errors, status=400)
