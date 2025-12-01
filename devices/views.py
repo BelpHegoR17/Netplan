@@ -101,23 +101,35 @@ def delete_device_api(request,id):
     device.delete()
     return Response({"message":"Device deleted successfully"}, status=204)
 
+ALLOWED_SORT_FIELDS = ['name','-name','id','-id','status','-stauts']
 @api_view(["GET"])
-def device_list_api(request):
-    devices = Device.objects.all()
+# def device_list_api(request):
+#     devices = Device.objects.all()
 
-    status = request.GET.get("status")
-    device_type = request.GET.get("device_type")
-    location = request.GET.get("location")
-    search = request.GET.get("search")
+#     status = request.GET.get("status")
+#     device_type = request.GET.get("device_type")
+#     location = request.GET.get("location")
+#     search = request.GET.get("search")
 
-    if status:
-        devices = devices.filter(status = status)
-    if device_type:
-        devices = devices.filter(device_type=device_type)
-    if location:
-        devices = devices.filter(location=location)
-    if search:
-        devices = devices.filter(status__icontains=search)
+#     if status:
+#         devices = devices.filter(status = status)
+#     if device_type:
+#         devices = devices.filter(device_type=device_type)
+#     if location:
+#         devices = devices.filter(location=location)
+#     if search:
+#         devices = devices.filter(status__icontains=search)
     
-    serialiser = DeviceSerializer(devices, many=True)
-    return Response(serialiser.data)
+#     serialiser = DeviceSerializer(devices, many=True)
+#     return Response(serialiser.data)
+
+
+def device_list_api(request):
+    device = Device.objects.all()
+
+    order = request.query_params.get("ordering")
+
+    if order in ALLOWED_SORT_FIELDS:
+        device = device.order_by(order)
+
+    return Response(DeviceSerializer(device, many = True).data)
