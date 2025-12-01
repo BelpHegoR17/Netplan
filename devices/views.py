@@ -141,4 +141,4 @@ class DeviceList(ListAPIView):
     serializer_class = DeviceSerializer
     filter_backends = [OrderingFilter]
     ordering_fields = ['name','status','location','id']
-    ordering = ['status']
+    ordering = ['id']

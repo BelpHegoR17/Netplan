@@ -126,5 +126,10 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 REST_FRAMEWORK = {
     'DEFAULT_FILTER_BACKENDS':[
         'rest_framework.filters.OrderingFilter'
-    ]
+    ],
+    # 'DEFAULT_PAGINATION_CLASS':'rest_framework.pagination.PageNumberPagination',
+    # 'DEFAULT_PAGINATION_CLASS':'rest_framework.pagination.LimitOffsetPagination',
+    'DEFAULT_PAGINATION_CLASS':'rest_framework.pagination.CursorPagination',
+    'PAGE_SIZE':10,
 }
+
