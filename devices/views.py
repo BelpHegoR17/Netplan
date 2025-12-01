@@ -4,6 +4,8 @@ from .forms import DeviceForm
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from .serialisers import DeviceSerializer
+from rest_framework.generics import ListAPIView
+from rest_framework.filters import OrderingFilter
 
 # Create your views here.
 
@@ -49,11 +51,11 @@ def edit_device(request,id):
     return render(request,"edit_device.html",{"form":form,"device":device})
 
 
-# @api_view(["GET"])
-# def device_list_api(request):
-#     devices = Device.objects.all()
-#     serializer = DeviceSerializer(devices, many=True)
-#     return Response(serializer.data)
+@api_view(["GET"])
+def device_list_api(request):
+    devices = Device.objects.all()
+    serializer = DeviceSerializer(devices, many=True)
+    return Response(serializer.data)
 
 @api_view(["GET"])
 def device_detail_api(request, id):
@@ -101,8 +103,8 @@ def delete_device_api(request,id):
     device.delete()
     return Response({"message":"Device deleted successfully"}, status=204)
 
-ALLOWED_SORT_FIELDS = ['name','-name','id','-id','status','-stauts']
-@api_view(["GET"])
+# ALLOWED_SORT_FIELDS = ['name','-name','id','-id','status','-stauts']
+# @api_view(["GET"])
 # def device_list_api(request):
 #     devices = Device.objects.all()
 
@@ -124,12 +126,19 @@ ALLOWED_SORT_FIELDS = ['name','-name','id','-id','status','-stauts']
 #     return Response(serialiser.data)
 
 
-def device_list_api(request):
-    device = Device.objects.all()
+# def device_list_api(request):
+#     device = Device.objects.all()
 
-    order = request.query_params.get("ordering")
+#     order = request.query_params.get("ordering")
 
-    if order in ALLOWED_SORT_FIELDS:
-        device = device.order_by(order)
+#     if order in ALLOWED_SORT_FIELDS:
+#         device = device.order_by(order)
 
-    return Response(DeviceSerializer(device, many = True).data)
+#     return Response(DeviceSerializer(device, many = True).data)
+
+class DeviceList(ListAPIView):
+    queryset = Device.objects.all()
+    serializer_class = DeviceSerializer
+    filter_backends = [OrderingFilter]
+    ordering_fields = ['name','status','location','id']
+    ordering = ['name']
