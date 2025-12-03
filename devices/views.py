@@ -6,6 +6,8 @@ from rest_framework.decorators import api_view
 from .serialisers import DeviceSerializer
 from rest_framework.generics import ListAPIView
 from rest_framework.filters import OrderingFilter
+from rest_framework.viewsets import ModelViewSet
+from rest_framework.decorators import action
 
 # Create your views here.
 
@@ -136,9 +138,18 @@ def delete_device_api(request,id):
 
 #     return Response(DeviceSerializer(device, many = True).data)
 
-class DeviceList(ListAPIView):
+# class DeviceList(ListAPIView):
+#     queryset = Device.objects.all()
+#     serializer_class = DeviceSerializer
+#     filter_backends = [OrderingFilter]
+#     ordering_fields = ['name','status','location','id']
+#     ordering = ['id']
+
+class DeviceViewset(ModelViewSet):
     queryset = Device.objects.all()
     serializer_class = DeviceSerializer
-    filter_backends = [OrderingFilter]
-    ordering_fields = ['name','status','location','id']
-    ordering = ['id']
+
+    @action(detail=True, methods=['POST'])
+    def reboot(self, request, pk=None):
+        device = self.get_object()
+        return Response({"message": f"{device.name} rebooted successfully"})

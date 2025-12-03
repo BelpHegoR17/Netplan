@@ -16,8 +16,12 @@ Including another URLconf
 """
 
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 from devices import views
+from rest_framework.routers import DefaultRouter
+
+router = DefaultRouter()
+router.register(r'devices', views.DeviceViewset)
 
 urlpatterns = [
     path("admin/", admin.site.urls),
@@ -26,7 +30,8 @@ urlpatterns = [
     path('online_devices/',views.online_devices,name="online_devices"),
     path('delete/<int:id>/',views.delete,name="delete"),
     path('edit_device/<int:id>',views.edit_device,name="edit_device"),
-    path('api/devices/',views.DeviceList.as_view(),name="device_list_api"),
+    path('api/',include(router.urls)),
+    # path('api/devices/',views.DeviceList.as_view(),name="device_list_api"),
     path('api/device/<int:id>/',views.device_detail_api,name="device_detail"),
     path('api/device/add/',views.add_device_api,name="add_device_api"),
     path('api/device/update/<int:id>/',views.update_api,name="update_device_api"),
