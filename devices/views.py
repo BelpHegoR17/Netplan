@@ -8,6 +8,8 @@ from rest_framework.generics import ListAPIView
 from rest_framework.filters import OrderingFilter
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.decorators import action
+from rest_framework.permissions import IsAdminUser, IsAuthenticated
+from devices.permissions import SunilcanEditOnly
 
 # Create your views here.
 
@@ -55,6 +57,7 @@ def edit_device(request,id):
 
 @api_view(["GET"])
 def device_list_api(request):
+    print("TRACE: Entered function device_list_api - FBV", "user:", getattr(request, "user", None), "auth:", getattr(request, "user", "Anonymous"))
     devices = Device.objects.all()
     serializer = DeviceSerializer(devices, many=True)
     return Response(serializer.data)
@@ -146,8 +149,11 @@ def delete_device_api(request,id):
 #     ordering = ['id']
 
 class DeviceViewset(ModelViewSet):
+
     queryset = Device.objects.all()
     serializer_class = DeviceSerializer
+    permission_classes = [SunilcanEditOnly]
+
 
     @action(detail=True, methods=['POST'])
     def reboot(self, request, pk=None):
